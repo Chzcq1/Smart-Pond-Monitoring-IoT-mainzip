@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { ArrowUpRight, Factory as FactoryIcon, MapPin } from 'lucide-react';
 import type { Factory, Station } from '../../types';
 import StatusBadge from '../common/StatusBadge';
+import { useI18n } from '../../i18n/I18nContext';
+import { industryTranslationKeys } from '../../i18n/translations';
 
 interface FactoryCardProps {
   factory: Factory;
@@ -9,6 +11,7 @@ interface FactoryCardProps {
 }
 
 export default function FactoryCard({ factory, stations }: FactoryCardProps) {
+  const { t } = useI18n();
   const onlineStations = stations.filter((station) => station.status === 'online').length;
 
   return (
@@ -20,7 +23,7 @@ export default function FactoryCard({ factory, stations }: FactoryCardProps) {
           </div>
           <div className="min-w-0">
             <h3 className="font-bold text-white truncate">{factory.name}</h3>
-            <p className="text-xs text-slate-500 mt-1 truncate">{factory.industry}</p>
+            <p className="text-xs text-slate-500 mt-1 truncate">{t(industryTranslationKeys[factory.industry] ?? 'common.industry')}</p>
           </div>
         </div>
         <StatusBadge status={factory.status} />
@@ -33,11 +36,11 @@ export default function FactoryCard({ factory, stations }: FactoryCardProps) {
 
       <div className="grid grid-cols-2 gap-3 pt-4 border-t border-[#1e293b]">
         <div>
-          <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Monitoring Stations</span>
+          <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">{t('factory.monitoringStations')}</span>
           <p className="text-2xl font-bold font-mono-data text-white mt-1">{stations.length}</p>
         </div>
         <div>
-          <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Online Devices</span>
+          <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">{t('factory.onlineDevices')}</span>
           <p className="text-2xl font-bold font-mono-data text-emerald-400 mt-1">{onlineStations}</p>
         </div>
       </div>
@@ -46,7 +49,7 @@ export default function FactoryCard({ factory, stations }: FactoryCardProps) {
         to={`/factory/${factory.id}`}
         className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#1e293b] hover:bg-teal-500 hover:text-slate-950 text-teal-400 px-4 py-2.5 text-sm font-semibold transition-colors"
       >
-        View Dashboard
+        {t('factory.viewDashboard')}
         <ArrowUpRight className="w-4 h-4" />
       </Link>
     </article>

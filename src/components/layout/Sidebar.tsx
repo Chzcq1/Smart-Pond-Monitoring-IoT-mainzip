@@ -3,16 +3,18 @@ import { Activity, AlertTriangle, Droplets, Wrench, FileText, Settings, BarChart
 import { cn } from '../../lib/utils';
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
+import { useI18n } from '../../i18n/I18nContext';
 
 const NAV_ITEMS = [
-  { href: '/', label: 'Overview', icon: BarChart2 },
-  { href: '/alerts', label: 'Active Alerts', icon: AlertTriangle },
-  { href: '/maintenance', label: 'Maintenance', icon: Wrench },
-  { href: '/reports', label: 'Reports', icon: FileText },
+  { href: '/', labelKey: 'nav.overview' as const, icon: BarChart2 },
+  { href: '/alerts', labelKey: 'nav.activeAlerts' as const, icon: AlertTriangle },
+  { href: '/maintenance', labelKey: 'nav.maintenance' as const, icon: Wrench },
+  { href: '/reports', labelKey: 'nav.reports' as const, icon: FileText },
 ];
 
 export default function Sidebar() {
   const location = useLocation();
+  const { t } = useI18n();
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
@@ -38,7 +40,7 @@ export default function Sidebar() {
       {/* Navigation */}
       <nav className="flex-1 py-6 px-4 space-y-1 overflow-y-auto scrollbar-thin">
         <div className="px-2 pb-2 text-[11px] font-semibold tracking-wider text-slate-500 uppercase">
-          System Dashboard
+          {t('nav.systemDashboard')}
         </div>
         {NAV_ITEMS.map((item) => {
           const isActive = location.pathname === item.href || (item.href !== '/' && location.pathname.startsWith(item.href));
@@ -58,7 +60,7 @@ export default function Sidebar() {
                 <div className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-teal-500 rounded-r-md shadow-[0_0_8px_rgba(45,212,191,0.6)]" />
               )}
               <Icon className="w-5 h-5" strokeWidth={isActive ? 2.5 : 2} />
-              <span className="font-medium text-sm">{item.label}</span>
+              <span className="font-medium text-sm">{t(item.labelKey)}</span>
             </Link>
           );
         })}
@@ -70,7 +72,7 @@ export default function Sidebar() {
           <div className="flex items-center justify-between bg-[#0f172a] rounded p-2.5 border border-[#1e293b]">
             <div className="flex items-center gap-2">
               <Activity className="w-4 h-4 text-teal-400" />
-              <span className="text-xs font-medium text-slate-300">Provider Mode</span>
+               <span className="text-xs font-medium text-slate-300">{t('nav.providerMode')}</span>
             </div>
             <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
           </div>

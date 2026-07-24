@@ -5,9 +5,11 @@ import StationCard from '../components/dashboard/StationCard';
 import FactoryCard from '../components/dashboard/FactoryCard';
 import { Activity, AlertTriangle, CheckCircle, Factory, ShieldAlert } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { useI18n } from '../i18n/I18nContext';
 
 export default function OverviewPage() {
   const { factories, stations } = useData();
+  const { t } = useI18n();
   const summary = useDashboardSummary(stations);
   const [selectedFactoryId, setSelectedFactoryId] = useState<string | 'all'>('all');
 
@@ -22,17 +24,17 @@ export default function OverviewPage() {
         
         {/* Header */}
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+            <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
             <Activity className="w-8 h-8 text-teal-400" />
-            Global Overview
+            {t('overview.title')}
           </h1>
-          <p className="text-slate-400 text-sm">Monitor all connected industrial wastewater treatment facilities in real-time.</p>
+          <p className="text-slate-400 text-sm">{t('overview.description')}</p>
         </div>
 
         {/* Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard 
-            title="Total Factories"
+            title={t('overview.totalFactories')}
             value={factories.length}
             icon={Factory} 
             color="text-slate-300"
@@ -40,7 +42,7 @@ export default function OverviewPage() {
             border="border-slate-700/50"
           />
           <StatCard 
-            title="Online Devices"
+            title={t('overview.onlineDevices')}
             value={summary.online} 
             icon={CheckCircle} 
             color="text-emerald-400"
@@ -48,7 +50,7 @@ export default function OverviewPage() {
             border="border-emerald-500/20"
           />
           <StatCard 
-            title="Warning Devices"
+            title={t('overview.warningDevices')}
             value={summary.warning} 
             icon={AlertTriangle} 
             color="text-amber-400"
@@ -56,7 +58,7 @@ export default function OverviewPage() {
             border="border-amber-500/20"
           />
           <StatCard 
-            title="Critical Devices"
+            title={t('overview.criticalDevices')}
             value={summary.critical} 
             icon={ShieldAlert} 
             color="text-rose-400"
@@ -70,10 +72,10 @@ export default function OverviewPage() {
         <section className="space-y-4">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold text-white">Factories</h2>
-              <p className="text-sm text-slate-500 mt-1">Facility health and monitoring coverage at a glance.</p>
+              <h2 className="text-xl font-bold text-white">{t('overview.factories')}</h2>
+              <p className="text-sm text-slate-500 mt-1">{t('overview.factoryDescription')}</p>
             </div>
-            <span className="text-xs text-slate-500 font-mono-data">{factories.length} facilities</span>
+            <span className="text-xs text-slate-500 font-mono-data">{factories.length} {t('overview.facilities')}</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
             {factories.map((factory) => (
@@ -97,7 +99,7 @@ export default function OverviewPage() {
                 : "bg-[#0f172a] text-slate-400 hover:text-white border border-[#1e293b]"
             )}
           >
-            All Facilities
+            {t('overview.allFacilities')}
           </button>
           {factories.map(f => (
             <button
@@ -129,8 +131,8 @@ export default function OverviewPage() {
         {filteredStations.length === 0 && (
           <div className="py-20 text-center flex flex-col items-center">
             <Factory className="w-12 h-12 text-slate-600 mb-4" />
-            <h3 className="text-lg font-medium text-slate-300">No stations found</h3>
-            <p className="text-slate-500 text-sm mt-1">This facility currently has no active monitoring stations.</p>
+             <h3 className="text-lg font-medium text-slate-300">{t('overview.noStations')}</h3>
+             <p className="text-slate-500 text-sm mt-1">{t('overview.noStationsDescription')}</p>
           </div>
         )}
 

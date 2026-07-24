@@ -7,6 +7,8 @@ import StatusBadge from '../components/common/StatusBadge';
 import { format } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { cn } from '../lib/utils';
+import { useI18n } from '../i18n/I18nContext';
+import { alertMessageTranslationKeys, stationDescriptionTranslationKeys } from '../i18n/translations';
 
 type Period = '24h' | '7d' | '30d';
 
@@ -20,6 +22,7 @@ export default function StationPage() {
   const { stationId } = useParams<{ stationId: string }>();
   const navigate = useNavigate();
   const { stations, factories, alerts } = useData();
+  const { t } = useI18n();
   const [period, setPeriod] = useState<Period>('24h');
   
   const station = useMemo(() => stations.find(s => s.id === stationId), [stations, stationId]);
@@ -31,9 +34,9 @@ export default function StationPage() {
   if (!station || !factory) {
     return (
       <div className="p-8 flex-1 flex flex-col items-center justify-center">
-        <h2 className="text-xl font-bold text-white mb-2">Station Not Found</h2>
+        <h2 className="text-xl font-bold text-white mb-2">{t('station.notFound')}</h2>
         <button onClick={() => navigate('/')} className="text-teal-400 hover:text-teal-300">
-          Return to Overview
+          {t('common.returnToOverview')}
         </button>
       </div>
     );
@@ -46,7 +49,7 @@ export default function StationPage() {
         {/* Navigation & Actions */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <Link to={`/factory/${factory.id}`} className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-teal-400 transition-colors uppercase tracking-wider font-semibold">
-            <ChevronLeft className="w-4 h-4" /> Back to {factory.name}
+            <ChevronLeft className="w-4 h-4" /> {t('common.backTo')} {factory.name}
           </Link>
         </div>
 
@@ -58,22 +61,22 @@ export default function StationPage() {
           <div className="flex-1 space-y-4">
             <div>
               <h1 className="text-3xl font-bold text-white tracking-tight">{station.name}</h1>
-              <p className="text-slate-400 mt-1">{station.description}</p>
+              <p className="text-slate-400 mt-1">{t(stationDescriptionTranslationKeys[station.id] ?? 'stationDescription.st01')}</p>
             </div>
             <div className="flex flex-wrap items-center gap-4">
               <StatusBadge status={station.status} size="lg" />
               <div className="flex items-center gap-2 text-sm text-slate-400 bg-[#1e293b] px-3 py-1.5 rounded-lg border border-slate-700/50">
                 <Clock className="w-4 h-4 text-teal-400" />
-                <span className="font-mono-data">Updated: {format(station.lastUpdated, 'HH:mm:ss')}</span>
+                <span className="font-mono-data">{t('common.updated')}: {format(station.lastUpdated, 'HH:mm:ss')}</span>
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <LiveMetric title="pH" value={station.current.ph.toFixed(2)} unit="" />
-            <LiveMetric title="Temp" value={station.current.temperature.toFixed(1)} unit="°C" />
-            <LiveMetric title="DO" value={station.current.dissolvedOxygen.toFixed(2)} unit="mg/L" />
-            <LiveMetric title="BOD" value={station.current.estimatedBOD.toFixed(1)} unit="mg/L" />
+            <LiveMetric title={t('common.temperatureShort')} value={station.current.temperature.toFixed(1)} unit="°C" />
+            <LiveMetric title={t('common.do')} value={station.current.dissolvedOxygen.toFixed(2)} unit="mg/L" />
+            <LiveMetric title={t('common.bod')} value={station.current.estimatedBOD.toFixed(1)} unit="mg/L" />
             <LiveMetric title="Turb" value={station.current.turbidity.toFixed(1)} unit="NTU" />
           </div>
         </div>
@@ -83,7 +86,7 @@ export default function StationPage() {
           {/* Main Charts Column */}
           <div className="lg:col-span-2 space-y-8">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-white">Historical Trends</h2>
+                <h2 className="text-xl font-bold text-white">{t('station.historicalTrends')}</h2>
               <div className="flex p-1 bg-[#0f172a] rounded-lg border border-[#1e293b]">
                 {(['24h', '7d', '30d'] as Period[]).map(p => (
                   <button
@@ -103,8 +106,8 @@ export default function StationPage() {
             </div>
 
             <div className="space-y-6">
-              <ChartCard 
-                title="pH Level" 
+                <ChartCard
+                title={t('station.phLevel')}
                 data={history} 
                 dataKey="ph" 
                 color="#06b6d4" 
@@ -115,7 +118,7 @@ export default function StationPage() {
                 icon={Beaker}
               />
               <ChartCard 
-                title="Temperature" 
+                title={t('common.temperature')}
                 data={history} 
                 dataKey="temperature" 
                 color="#f59e0b" 
@@ -125,7 +128,7 @@ export default function StationPage() {
                 icon={Thermometer}
               />
               <ChartCard 
-                title="Dissolved Oxygen (DO)" 
+                title={t('station.dissolvedOxygen')}
                 data={history} 
                 dataKey="dissolvedOxygen" 
                 color="#3b82f6" 
@@ -135,7 +138,7 @@ export default function StationPage() {
                 icon={Wind}
               />
               <ChartCard 
-                title="Estimated BOD" 
+                title={t('station.estimatedBOD')}
                 data={history} 
                 dataKey="estimatedBOD" 
                 color="#10b981" 
@@ -145,7 +148,7 @@ export default function StationPage() {
                 icon={Activity}
               />
               <ChartCard 
-                title="Turbidity" 
+                title={t('common.turbidity')}
                 data={history} 
                 dataKey="turbidity" 
                 color="#8b5cf6" 
@@ -164,7 +167,7 @@ export default function StationPage() {
             {stationAlerts.length > 0 && (
               <div className="bg-rose-500/5 border border-rose-500/20 rounded-xl p-6">
                 <h3 className="text-rose-400 font-bold flex items-center gap-2 mb-4">
-                  <AlertTriangle className="w-5 h-5" /> Active Alerts ({stationAlerts.length})
+                  <AlertTriangle className="w-5 h-5" /> {t('station.activeAlerts')} ({stationAlerts.length})
                 </h3>
                 <div className="space-y-3">
                   {stationAlerts.map(alert => (
@@ -173,9 +176,9 @@ export default function StationPage() {
                         <span className="text-xs font-bold text-rose-400 uppercase tracking-wider">{alert.type}</span>
                         <span className="text-[10px] text-slate-500 font-mono-data">{format(alert.timestamp, 'HH:mm')}</span>
                       </div>
-                      <p className="text-sm text-slate-300">{alert.message}</p>
+                        <p className="text-sm text-slate-300">{t(alertMessageTranslationKeys[alert.id] ?? 'alerts.message')}</p>
                       <div className="mt-2 text-xs font-mono-data text-slate-400">
-                        Value: <span className="text-rose-400 font-bold">{alert.value.toFixed(1)}</span> (Limit: {alert.threshold})
+                         {t('common.value')}: <span className="text-rose-400 font-bold">{alert.value.toFixed(1)}</span> ({t('common.limit')}: {alert.threshold})
                       </div>
                     </div>
                   ))}
@@ -186,20 +189,20 @@ export default function StationPage() {
             {/* Maintenance Schedule */}
             <div className="bg-[#0f172a] rounded-xl border border-[#1e293b] p-6">
               <h3 className="text-white font-bold flex items-center gap-2 mb-4">
-                <Wrench className="w-5 h-5 text-teal-400" /> Maintenance Schedule
+                <Wrench className="w-5 h-5 text-teal-400" /> {t('station.maintenanceSchedule')}
               </h3>
               <div className="space-y-4">
-                <MaintenanceItem title="Sensor Cleaning" last={station.maintenance.lastCleaning} next={station.maintenance.nextCleaning} />
-                <MaintenanceItem title="System Calibration" last={station.maintenance.lastCalibration} next={station.maintenance.nextCalibration} />
+                <MaintenanceItem title={t('station.sensorCleaning')} last={station.maintenance.lastCleaning} next={station.maintenance.nextCleaning} lastLabel={t('station.last')} nextLabel={t('station.next')} />
+                <MaintenanceItem title={t('station.systemCalibration')} last={station.maintenance.lastCalibration} next={station.maintenance.nextCalibration} lastLabel={t('station.last')} nextLabel={t('station.next')} />
               </div>
               <div className="mt-6 pt-4 border-t border-[#1e293b] flex items-center justify-between">
-                <span className="text-sm text-slate-400">Status</span>
+                 <span className="text-sm text-slate-400">{t('common.status')}</span>
                 {station.maintenance.status === 'ok' ? (
-                  <span className="text-emerald-400 font-bold text-sm uppercase tracking-wider">Optimal</span>
+                   <span className="text-emerald-400 font-bold text-sm uppercase tracking-wider">{t('common.optimal')}</span>
                 ) : station.maintenance.status === 'due-soon' ? (
-                  <span className="text-amber-400 font-bold text-sm uppercase tracking-wider">Due Soon</span>
+                   <span className="text-amber-400 font-bold text-sm uppercase tracking-wider">{t('common.dueSoon')}</span>
                 ) : (
-                  <span className="text-rose-400 font-bold text-sm uppercase tracking-wider">Overdue</span>
+                   <span className="text-rose-400 font-bold text-sm uppercase tracking-wider">{t('common.overdue')}</span>
                 )}
               </div>
             </div>
@@ -208,25 +211,25 @@ export default function StationPage() {
             <div className="bg-[#0f172a] rounded-xl border border-[#1e293b] overflow-hidden">
               <div className="p-5 border-b border-[#1e293b]">
                 <h3 className="text-white font-bold flex items-center gap-2">
-                  <Activity className="w-5 h-5 text-teal-400" /> Period Statistics
+                   <Activity className="w-5 h-5 text-teal-400" /> {t('station.periodStatistics')}
                 </h3>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left">
                   <thead className="text-[10px] uppercase tracking-wider text-slate-500 bg-[#1e293b]/50">
                     <tr>
-                      <th className="px-5 py-3 font-semibold">Sensor</th>
-                      <th className="px-5 py-3 font-semibold">Avg</th>
-                      <th className="px-5 py-3 font-semibold">Min</th>
-                      <th className="px-5 py-3 font-semibold">Max</th>
+                       <th className="px-5 py-3 font-semibold">{t('station.sensor')}</th>
+                       <th className="px-5 py-3 font-semibold">{t('station.average')}</th>
+                       <th className="px-5 py-3 font-semibold">{t('station.min')}</th>
+                       <th className="px-5 py-3 font-semibold">{t('station.max')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#1e293b]">
-                    <StatRow label="pH" stats={stats.ph} />
-                    <StatRow label="Temp" stats={stats.temperature} />
-                    <StatRow label="DO" stats={stats.dissolvedOxygen} />
-                    <StatRow label="BOD" stats={stats.estimatedBOD} />
-                    <StatRow label="Turbidity" stats={stats.turbidity} />
+                     <StatRow label="pH" stats={stats.ph} />
+                     <StatRow label={t('common.temperatureShort')} stats={stats.temperature} />
+                     <StatRow label={t('common.do')} stats={stats.dissolvedOxygen} />
+                     <StatRow label={t('common.bod')} stats={stats.estimatedBOD} />
+                     <StatRow label={t('common.turbidity')} stats={stats.turbidity} />
                   </tbody>
                 </table>
               </div>
@@ -252,7 +255,7 @@ function LiveMetric({ title, value, unit }: { title: string, value: string, unit
   );
 }
 
-function MaintenanceItem({ title, last, next }: { title: string, last: Date, next: Date }) {
+function MaintenanceItem({ title, last, next, lastLabel, nextLabel }: { title: string, last: Date, next: Date, lastLabel: string, nextLabel: string }) {
   return (
     <div>
       <h4 className="text-sm font-semibold text-slate-300 mb-2">{title}</h4>
@@ -260,14 +263,14 @@ function MaintenanceItem({ title, last, next }: { title: string, last: Date, nex
         <div className="bg-[#1e293b]/50 p-2 rounded flex items-center gap-2">
           <Calendar className="w-3 h-3 text-slate-500" />
           <div className="flex flex-col">
-            <span className="text-[9px] text-slate-500 uppercase">Last</span>
+             <span className="text-[9px] text-slate-500 uppercase">{lastLabel}</span>
             <span className="text-slate-300 font-mono-data">{format(last, 'dd MMM')}</span>
           </div>
         </div>
         <div className="bg-[#1e293b]/50 p-2 rounded flex items-center gap-2">
           <Calendar className="w-3 h-3 text-teal-500" />
           <div className="flex flex-col">
-            <span className="text-[9px] text-teal-500 uppercase">Next</span>
+             <span className="text-[9px] text-teal-500 uppercase">{nextLabel}</span>
             <span className="text-slate-300 font-mono-data">{format(next, 'dd MMM')}</span>
           </div>
         </div>
@@ -288,6 +291,7 @@ function StatRow({ label, stats }: { label: string, stats: any }) {
 }
 
 function ChartCard({ title, data, dataKey, color, unit, min, max, domain, icon: Icon }: any) {
+  const { t } = useI18n();
   return (
     <div className="bg-[#0f172a] rounded-xl border border-[#1e293b] p-5">
       <div className="flex items-center justify-between mb-6">
@@ -295,8 +299,8 @@ function ChartCard({ title, data, dataKey, color, unit, min, max, domain, icon: 
           <Icon className="w-5 h-5 text-teal-400" /> {title} {unit && <span className="text-slate-500 font-normal text-sm">({unit})</span>}
         </h3>
         <div className="flex gap-3 text-xs font-mono-data text-slate-500">
-          {min !== undefined && <div>Min Threshold: <span className="text-slate-300">{min}</span></div>}
-          {max !== undefined && <div>Max Threshold: <span className="text-slate-300">{max}</span></div>}
+           {min !== undefined && <div>{t('station.minThreshold')}: <span className="text-slate-300">{min}</span></div>}
+           {max !== undefined && <div>{t('station.maxThreshold')}: <span className="text-slate-300">{max}</span></div>}
         </div>
       </div>
       <div className="h-[240px] w-full">

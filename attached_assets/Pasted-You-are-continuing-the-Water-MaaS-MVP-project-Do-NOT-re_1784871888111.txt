@@ -1,0 +1,243 @@
+You are continuing the Water-MaaS MVP project.
+
+Do NOT redesign the UI.
+
+Do NOT replace the existing architecture.
+
+Continue building on the existing codebase only.
+
+======================================================
+CURRENT PROJECT STATUS
+======================================================
+
+The frontend dashboard is already functional.
+
+The project now needs to evolve from a single dashboard into a complete SaaS platform.
+
+This is still an MVP.
+
+There are NO real IoT devices.
+
+There are NO real sensors.
+
+The system will use a Virtual Device Simulator until the hardware prototype is completed.
+
+======================================================
+OBJECTIVE
+======================================================
+
+Transform the current project into a realistic Water Monitoring SaaS platform.
+
+The system architecture must be prepared for future IoT integration while remaining fully functional using simulated devices.
+
+======================================================
+SYSTEM FLOW
+======================================================
+
+Future Production
+
+ESP8266 Sensors
+
+↓
+
+Google Apps Script
+
+↓
+
+Google Spreadsheet
+
+↓
+
+Website
+
+↓
+
+Telegram Notification
+
+Current MVP
+
+Virtual Device Simulator
+
+↓
+
+Google Apps Script (future)
+
+↓
+
+Google Spreadsheet (future)
+
+↓
+
+Website
+
+↓
+
+Telegram Notification (future)
+
+For now, the simulator should generate realistic sensor values directly inside the application.
+
+======================================================
+NEW FEATURES
+======================================================
+
+1.
+
+Create a Provider Dashboard.
+
+The provider can monitor all factories.
+
+Display:
+
+Total Factories
+
+Online Devices
+
+Offline Devices
+
+Warning Devices
+
+Critical Devices
+
+Recent Alerts
+
+Maintenance Schedule
+
+------------------------------------------------------
+
+2.
+
+Create Factory Management.
+
+Display every factory as a card.
+
+Factory Name
+
+Location
+
+Status
+
+Total Monitoring Stations
+
+View Factory
+
+------------------------------------------------------
+
+3.
+
+Inside each factory,
+
+display multiple monitoring stations.
+
+Example
+
+Aeration Tank
+
+Sedimentation Tank
+
+Biological Reactor
+
+Equalization Tank
+
+Each station opens its own dashboard.
+
+------------------------------------------------------
+
+4.
+
+Create a Virtual Device Simulator.
+
+Instead of random values,
+
+simulate realistic environmental behaviour.
+
+Examples
+
+Temperature changes slowly.
+
+pH changes gradually.
+
+DO decreases when simulated failure occurs.
+
+Estimated BOD increases gradually.
+
+Turbidity fluctuates realistically.
+
+Support:
+
+Normal Mode
+
+Warning Mode
+
+Critical Mode
+
+Recovery Mode
+
+The simulator should make graphs appear believable.
+
+------------------------------------------------------
+
+5.
+
+Create Notification Center.
+
+Store all generated alerts.
+
+Prepare the architecture for future Telegram integration.
+
+Do not connect Telegram yet.
+
+Only prepare the notification service.
+
+------------------------------------------------------
+
+6.
+
+Create Report Center.
+
+Display report history.
+
+Prepare Generate PDF button.
+
+Do not implement PDF export yet.
+
+------------------------------------------------------
+
+7.
+
+Keep the project modular.
+
+Separate
+
+UI
+
+Simulation
+
+Data Layer
+
+Notification Layer
+
+Future API Layer
+
+======================================================
+IMPORTANT
+======================================================
+
+This MVP must demonstrate a complete SaaS platform.
+
+The Virtual Device Simulator represents future IoT hardware.
+
+When Google Apps Script and ESP8266 become available,
+
+only the simulator will be replaced.
+
+Everything else should continue working without major changes.
+
+Do not implement authentication.
+
+Do not implement backend.
+
+Do not redesign completed pages.
+
+Reuse existing components whenever possible.
+
+Produce production-quality code.

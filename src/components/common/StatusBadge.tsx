@@ -1,5 +1,6 @@
 import { cn } from '../../lib/utils';
 import type { StatusLevel } from '../../types';
+import { useI18n } from '../../i18n/I18nContext';
 
 interface StatusBadgeProps {
   status: StatusLevel;
@@ -9,34 +10,35 @@ interface StatusBadgeProps {
 }
 
 export default function StatusBadge({ status, className, showLabel = true, size = 'md' }: StatusBadgeProps) {
+  const { t } = useI18n();
   const config = {
     online: {
       bg: 'bg-emerald-500/10',
       text: 'text-emerald-400',
       border: 'border-emerald-500/20',
       dot: 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]',
-      label: 'Online'
+       label: t('common.online')
     },
     warning: {
       bg: 'bg-amber-500/10',
       text: 'text-amber-400',
       border: 'border-amber-500/20',
       dot: 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]',
-      label: 'Warning'
+       label: t('common.warning')
     },
     critical: {
       bg: 'bg-rose-500/10',
       text: 'text-rose-400',
       border: 'border-rose-500/20',
       dot: 'bg-rose-500 animate-pulse-dot shadow-[0_0_8px_rgba(244,63,94,0.8)]',
-      label: 'Critical'
+       label: t('common.critical')
     },
     offline: {
       bg: 'bg-slate-500/10',
       text: 'text-slate-400',
       border: 'border-slate-500/20',
       dot: 'bg-slate-500',
-      label: 'Offline'
+       label: t('common.offline')
     }
   };
 

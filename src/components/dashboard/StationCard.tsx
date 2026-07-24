@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { cn } from '../../lib/utils';
 import type { Station } from '../../types';
 import StatusBadge from '../common/StatusBadge';
+import { useI18n } from '../../i18n/I18nContext';
 
 interface StationCardProps {
   station: Station;
@@ -11,6 +12,7 @@ interface StationCardProps {
 }
 
 export default function StationCard({ station, factoryName }: StationCardProps) {
+  const { t } = useI18n();
   const { current, status } = station;
 
   const bgBorder = {
@@ -46,23 +48,23 @@ export default function StationCard({ station, factoryName }: StationCardProps) 
         </div>
 
         <div className="grid grid-cols-2 gap-4 my-4 flex-1">
-          <Metric label="pH" value={current.ph.toFixed(2)} unit="" icon={Beaker} />
-          <Metric label="Temp" value={current.temperature.toFixed(1)} unit="°C" icon={Thermometer} />
-          <Metric label="DO" value={current.dissolvedOxygen.toFixed(2)} unit="mg/L" icon={Wind} />
-          <Metric label="Est. BOD" value={current.estimatedBOD.toFixed(1)} unit="mg/L" icon={Activity} />
-          <Metric label="Turbidity" value={current.turbidity.toFixed(1)} unit="NTU" icon={Droplets} />
+          <Metric label={t('common.ph')} value={current.ph.toFixed(2)} unit="" icon={Beaker} />
+          <Metric label={t('common.temperatureShort')} value={current.temperature.toFixed(1)} unit="°C" icon={Thermometer} />
+          <Metric label={t('common.do')} value={current.dissolvedOxygen.toFixed(2)} unit="mg/L" icon={Wind} />
+          <Metric label={`${t('common.estimatedBOD')}`} value={current.estimatedBOD.toFixed(1)} unit="mg/L" icon={Activity} />
+          <Metric label={t('common.turbidity')} value={current.turbidity.toFixed(1)} unit="NTU" icon={Droplets} />
         </div>
       </div>
 
       <div className="border-t border-slate-800/50 bg-[#020617]/30 p-3 flex justify-between items-center">
         <div className="text-[10px] text-slate-500 font-mono-data">
-          UPDATED {format(station.lastUpdated, 'HH:mm:ss')}
+          {t('common.updated').toUpperCase()} {format(station.lastUpdated, 'HH:mm:ss')}
         </div>
         <Link 
           to={`/station/${station.id}`}
           className="text-teal-400 hover:text-teal-300 text-xs font-semibold flex items-center gap-1 group-hover:gap-2 transition-all uppercase tracking-wider"
         >
-          View Dashboard <ChevronRight className="w-3 h-3" />
+          {t('factory.viewDashboard')} <ChevronRight className="w-3 h-3" />
         </Link>
       </div>
     </div>

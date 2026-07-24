@@ -4,11 +4,14 @@ import { useDashboardSummary } from '../hooks/useSimulatedData';
 import StationCard from '../components/dashboard/StationCard';
 import StatusBadge from '../components/common/StatusBadge';
 import { ChevronLeft, Factory, MapPin, Briefcase, Users } from 'lucide-react';
+import { useI18n } from '../i18n/I18nContext';
+import { industryTranslationKeys } from '../i18n/translations';
 
 export default function FactoryPage() {
   const { factoryId } = useParams<{ factoryId: string }>();
   const navigate = useNavigate();
   const { factories, stations } = useData();
+  const { t } = useI18n();
   
   const factory = factories.find(f => f.id === factoryId);
   const factoryStations = stations.filter(s => s.factoryId === factoryId);
@@ -17,9 +20,9 @@ export default function FactoryPage() {
   if (!factory) {
     return (
       <div className="p-8 flex-1 flex flex-col items-center justify-center">
-        <h2 className="text-xl font-bold text-white mb-2">Factory Not Found</h2>
+        <h2 className="text-xl font-bold text-white mb-2">{t('factory.notFound')}</h2>
         <button onClick={() => navigate('/')} className="text-teal-400 hover:text-teal-300">
-          Return to Overview
+          {t('common.returnToOverview')}
         </button>
       </div>
     );
@@ -30,7 +33,7 @@ export default function FactoryPage() {
       <div className="max-w-7xl mx-auto space-y-8">
         
         <Link to="/" className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-teal-400 transition-colors uppercase tracking-wider font-semibold">
-          <ChevronLeft className="w-4 h-4" /> Back to Overview
+          <ChevronLeft className="w-4 h-4" /> {t('common.backTo')} {t('nav.overview')}
         </Link>
 
         {/* Factory Header */}
@@ -60,22 +63,22 @@ export default function FactoryPage() {
               <div className="flex items-center gap-3">
                 <Users className="w-5 h-5 text-slate-500" />
                 <div className="flex flex-col">
-                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Customer</span>
+                   <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">{t('common.customer')}</span>
                   <span className="text-sm font-medium text-slate-300">{factory.customer}</span>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <MapPin className="w-5 h-5 text-slate-500" />
                 <div className="flex flex-col">
-                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Location</span>
+                   <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">{t('common.location')}</span>
                   <span className="text-sm font-medium text-slate-300">{factory.location}</span>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <Briefcase className="w-5 h-5 text-slate-500" />
                 <div className="flex flex-col">
-                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Industry</span>
-                  <span className="text-sm font-medium text-slate-300">{factory.industry}</span>
+                   <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">{t('common.industry')}</span>
+                   <span className="text-sm font-medium text-slate-300">{t(industryTranslationKeys[factory.industry] ?? 'common.industry')}</span>
                 </div>
               </div>
             </div>
@@ -84,15 +87,15 @@ export default function FactoryPage() {
           {/* Quick Stats */}
           <div className="flex gap-4 lg:border-l border-[#1e293b] lg:pl-8">
             <div className="flex flex-col gap-1">
-              <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Stations</span>
+               <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">{t('factory.stations')}</span>
               <span className="text-4xl font-bold font-mono-data text-white">{summary.total}</span>
             </div>
             <div className="flex flex-col gap-1">
-              <span className="text-[10px] uppercase tracking-wider text-emerald-500/70 font-semibold">Online</span>
+               <span className="text-[10px] uppercase tracking-wider text-emerald-500/70 font-semibold">{t('factory.online')}</span>
               <span className="text-4xl font-bold font-mono-data text-emerald-400">{summary.online}</span>
             </div>
             <div className="flex flex-col gap-1">
-              <span className="text-[10px] uppercase tracking-wider text-rose-500/70 font-semibold">Critical</span>
+               <span className="text-[10px] uppercase tracking-wider text-rose-500/70 font-semibold">{t('factory.critical')}</span>
               <span className="text-4xl font-bold font-mono-data text-rose-400">{summary.critical}</span>
             </div>
           </div>
@@ -101,7 +104,7 @@ export default function FactoryPage() {
         {/* Stations Grid */}
         <div>
           <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-            Monitoring Stations
+             {t('factory.monitoringStations')}
             <span className="text-sm font-medium bg-[#1e293b] text-slate-300 px-2 py-0.5 rounded-md">{factoryStations.length}</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
