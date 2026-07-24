@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Activity, AlertTriangle, Droplets, Wrench, FileText, Settings, BarChart2 } from 'lucide-react';
+import { Activity, AlertTriangle, Droplets, Wrench, FileText, BarChart2, X } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
@@ -12,7 +12,12 @@ const NAV_ITEMS = [
   { href: '/reports', labelKey: 'nav.reports' as const, icon: FileText },
 ];
 
-export default function Sidebar() {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const location = useLocation();
   const { t } = useI18n();
   const [now, setNow] = useState(new Date());
@@ -22,12 +27,24 @@ export default function Sidebar() {
     return () => clearInterval(timer);
   }, []);
 
+  // Close sidebar on navigation (mobile)
+  useEffect(() => {
+    onClose();
+  }, [location.pathname]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
-    <aside className="fixed top-0 left-0 bottom-0 w-[260px] bg-[#0f172a] border-r border-[#1e293b] flex flex-col z-50 shadow-xl">
+    <aside
+      className={cn(
+        "fixed top-0 left-0 bottom-0 w-[260px] bg-[#0f172a] border-r border-[#1e293b] flex flex-col z-50 shadow-xl transition-transform duration-300",
+        // Mobile: slide in/out; Desktop: always visible
+        "lg:translate-x-0",
+        isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+      )}
+    >
       {/* Brand Header */}
       <div className="h-20 flex items-center px-6 border-b border-[#1e293b]">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center border border-teal-500/20">
+        <div className="flex items-center gap-3 flex-1">
+          <div className="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center border border-teal-500/20 shrink-0">
             <Droplets className="w-6 h-6 text-teal-400" />
           </div>
           <div className="flex flex-col">
@@ -35,6 +52,14 @@ export default function Sidebar() {
             <span className="text-[10px] uppercase tracking-widest text-slate-400 font-medium">Mission Control</span>
           </div>
         </div>
+        {/* Close button — mobile only */}
+        <button
+          onClick={onClose}
+          className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#1e293b] transition-colors"
+          aria-label="Close menu"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
       {/* Navigation */}
@@ -51,8 +76,8 @@ export default function Sidebar() {
               to={item.href}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 group relative",
-                isActive 
-                  ? "bg-teal-500/10 text-teal-400" 
+                isActive
+                  ? "bg-teal-500/10 text-teal-400"
                   : "text-slate-400 hover:bg-[#1e293b] hover:text-slate-200"
               )}
             >
@@ -72,11 +97,11 @@ export default function Sidebar() {
           <div className="flex items-center justify-between bg-[#0f172a] rounded p-2.5 border border-[#1e293b]">
             <div className="flex items-center gap-2">
               <Activity className="w-4 h-4 text-teal-400" />
-               <span className="text-xs font-medium text-slate-300">{t('nav.providerMode')}</span>
+              <span className="text-xs font-medium text-slate-300">{t('nav.providerMode')}</span>
             </div>
             <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
           </div>
-          
+
           <div className="text-center font-mono-data text-xs text-slate-400 tracking-wider">
             {format(now, 'dd MMM yyyy')} • <span className="text-slate-300 font-medium">{format(now, 'HH:mm:ss')}</span>
           </div>
