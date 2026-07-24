@@ -1,0 +1,452 @@
+Water-MaaS MVP – Replit Agent Development Brief
+
+Project Overview
+
+This project is not a final production system.
+
+It is an MVP (Minimum Viable Product) created for business validation and project presentation.
+
+The objective is to demonstrate how a Water Monitoring-as-a-Service (Water-MaaS) platform would work before any physical hardware prototype is deployed.
+
+At this stage, there are:
+
+* No ESP8266 devices
+* No real sensors
+* No actual industrial data
+
+All monitoring values will be generated from simulated datasets to emulate a real industrial wastewater monitoring environment.
+
+The website itself will become the presentation platform instead of traditional PowerPoint slides.
+
+⸻
+
+Background
+
+Many SME factories cannot afford industrial online water quality monitoring systems because:
+
+* High upfront equipment cost (CapEx)
+* Complex maintenance
+* Sensor calibration difficulties
+* No in-house environmental engineer
+* Lack of real-time monitoring
+
+Our business proposes an alternative:
+
+Water Monitoring-as-a-Service (Water-MaaS)
+
+Instead of selling expensive monitoring equipment, we provide:
+
+* Monthly subscription
+* Cloud dashboard
+* Automatic reporting
+* LINE OA notifications
+* Scheduled maintenance reminders
+* Calibration service (future phase)
+* Estimated water quality trends
+
+This MVP demonstrates that business concept.
+
+⸻
+
+Important Scope
+
+This MVP DOES NOT claim to measure laboratory BOD directly.
+
+The platform only demonstrates:
+
+* Water quality monitoring
+* Data visualization
+* Estimated BOD trend (simulated)
+* Alert management
+* Reporting workflow
+
+Future versions may integrate mathematical surrogate models and real IoT devices.
+
+⸻
+
+MVP Goal
+
+Create a modern SaaS dashboard capable of demonstrating:
+
+* Multi-factory support
+* Multiple monitoring stations (machines/tanks)
+* Live sensor dashboard
+* Historical graphs
+* PDF report generation
+* Maintenance scheduling
+* Alert system
+* Expandable architecture
+
+The project should be designed so real ESP8266 devices and APIs can replace simulated data in the future without redesigning the frontend.
+
+⸻
+
+System Architecture
+
+Future architecture:
+
+ESP8266 Sensors
+↓
+
+Google Apps Script API
+
+↓
+
+Google Spreadsheet (temporary database)
+
+↓
+
+REST API
+
+↓
+
+Vercel Website
+
+↓
+
+Dashboard
+
+↓
+
+PDF Reports
+
+↓
+
+LINE OA Notifications
+
+Current MVP architecture:
+
+Random Data Generator
+
+↓
+
+Google Sheet
+
+↓
+
+Apps Script API
+
+↓
+
+Vercel Website
+
+↓
+
+Dashboard
+
+↓
+
+PDF Export
+
+⸻
+
+User Roles
+
+1. Water-MaaS Provider
+
+Can monitor every customer.
+
+Functions:
+
+* View all factories
+* View every monitoring station
+* Device health
+* Maintenance schedule
+* Alarm history
+
+⸻
+
+2. Factory Customer
+
+Can only access their own factory.
+
+Functions:
+
+* Dashboard
+* Graphs
+* Reports
+* Alerts
+* Maintenance status
+
+(Authentication is optional for MVP.)
+
+⸻
+
+Dashboard Requirements
+
+Homepage should contain summary cards.
+
+Example metrics:
+
+* Total Factories
+* Online Devices
+* Warning Devices
+* Critical Devices
+
+Below that, display monitoring station cards.
+
+Each card should include:
+
+* Station Name
+* Status
+* pH
+* Temperature
+* Dissolved Oxygen (DO)
+* Estimated BOD
+* Turbidity
+* Last Updated
+* View Dashboard button
+
+Cards should support unlimited monitoring stations.
+
+⸻
+
+Station Dashboard
+
+Each station has its own page.
+
+Display:
+
+* Current sensor values
+* Line charts
+* Daily trends
+* Weekly trends
+* Monthly trends
+
+Graphs required:
+
+* pH
+* Temperature
+* Dissolved Oxygen
+* Estimated BOD
+* Turbidity
+
+Statistics:
+
+* Latest
+* Average
+* Minimum
+* Maximum
+
+⸻
+
+Reports Module
+
+Generate downloadable PDF reports.
+
+Selectable period:
+
+* Today
+* Last 7 Days
+* Last 30 Days
+* Custom Date Range
+
+PDF should include:
+
+Factory Information
+
+Monitoring Station
+
+Summary Table
+
+Charts
+
+Environmental Status
+
+Generated Time
+
+Company Logo Placeholder
+
+⸻
+
+Maintenance Module
+
+Each station should contain:
+
+Last Cleaning
+
+Next Cleaning
+
+Last Calibration
+
+Next Calibration
+
+Remaining Days
+
+Status
+
+If maintenance is due soon, show warning badge.
+
+⸻
+
+Alerts Module
+
+Support threshold settings.
+
+Example:
+
+DO < Threshold
+
+Estimated BOD > Threshold
+
+pH Out of Range
+
+High Turbidity
+
+When threshold exceeded:
+
+Display Warning Card
+
+Record Alarm History
+
+Future integration:
+
+LINE OA Push Notification
+
+Example message:
+
+⚠ Water-MaaS Alert
+
+Factory:
+ABC Factory
+
+Station:
+Aeration Tank 02
+
+Estimated BOD exceeded threshold.
+
+Please inspect the wastewater treatment process.
+
+⸻
+
+Factory Management
+
+Support multiple factories.
+
+Each factory contains:
+
+Factory Name
+
+Customer
+
+Monitoring Stations
+
+Location
+
+Status
+
+Each station belongs to one factory.
+
+⸻
+
+Data Structure
+
+Prepare frontend assuming API will return data similar to:
+
+Factory
+
+Monitoring Station
+
+Sensor Records
+
+Thresholds
+
+Maintenance Schedule
+
+Alarm History
+
+Design reusable interfaces so backend replacement is easy later.
+
+⸻
+
+Simulated Data
+
+Since no hardware exists yet:
+
+Generate realistic sensor values.
+
+Avoid completely random jumps.
+
+Examples:
+
+Temperature changes slowly.
+
+pH remains relatively stable.
+
+DO gradually decreases under abnormal conditions.
+
+Estimated BOD increases gradually during simulated failures.
+
+Turbidity fluctuates realistically.
+
+The simulation should look believable.
+
+⸻
+
+UI Design
+
+Modern SaaS appearance.
+
+Clean.
+
+Professional.
+
+Industrial.
+
+Responsive.
+
+Use cards.
+
+Charts.
+
+Status badges.
+
+Tables.
+
+Dark/light friendly.
+
+Think of dashboards similar to modern cloud platforms.
+
+⸻
+
+Technical Expectations
+
+* React (preferred)
+* TypeScript (preferred)
+* Component-based architecture
+* Reusable UI components
+* Easy API replacement
+* Clean folder structure
+* Ready for Vercel deployment
+
+⸻
+
+Future Integrations (Not Required Now)
+
+Google Apps Script
+
+Google Sheets
+
+ESP8266
+
+MQTT
+
+MongoDB
+
+Flask
+
+Machine Learning Model
+
+LINE OA
+
+Real Sensor APIs
+
+⸻
+
+Final Objective
+
+This project should feel like a commercial SaaS platform instead of a school assignment.
+
+The website itself will be used to present the business concept.
+
+It must clearly demonstrate how Water-MaaS could operate in the real world, while remaining flexible enough to connect to actual IoT hardware and backend services in future development.
