@@ -4,6 +4,7 @@
  */
 
 const API_URL =
+  import.meta.env.VITE_APPS_SCRIPT_URL ||
   'https://script.google.com/macros/s/AKfycbzRNPTNiYjTx8CZPd4XRckgkz1G27vxYkzXrxWjhEx_Gg5gf17sNlLbmEuOWEIDpHrz/exec';
 
 async function apiFetch<T>(action: string): Promise<T> {
