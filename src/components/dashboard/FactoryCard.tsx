@@ -1,0 +1,54 @@
+import { Link } from 'react-router-dom';
+import { ArrowUpRight, Factory as FactoryIcon, MapPin } from 'lucide-react';
+import type { Factory, Station } from '../../types';
+import StatusBadge from '../common/StatusBadge';
+
+interface FactoryCardProps {
+  factory: Factory;
+  stations: Station[];
+}
+
+export default function FactoryCard({ factory, stations }: FactoryCardProps) {
+  const onlineStations = stations.filter((station) => station.status === 'online').length;
+
+  return (
+    <article className="bg-[#0f172a] border border-[#1e293b] rounded-xl p-5 flex flex-col gap-5 hover:border-teal-500/40 transition-colors">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center shrink-0">
+            <FactoryIcon className="w-5 h-5 text-teal-400" />
+          </div>
+          <div className="min-w-0">
+            <h3 className="font-bold text-white truncate">{factory.name}</h3>
+            <p className="text-xs text-slate-500 mt-1 truncate">{factory.industry}</p>
+          </div>
+        </div>
+        <StatusBadge status={factory.status} />
+      </div>
+
+      <div className="flex items-start gap-2 text-sm text-slate-400 min-h-10">
+        <MapPin className="w-4 h-4 text-slate-500 mt-0.5 shrink-0" />
+        <span>{factory.location}</span>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 pt-4 border-t border-[#1e293b]">
+        <div>
+          <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Monitoring Stations</span>
+          <p className="text-2xl font-bold font-mono-data text-white mt-1">{stations.length}</p>
+        </div>
+        <div>
+          <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Online Devices</span>
+          <p className="text-2xl font-bold font-mono-data text-emerald-400 mt-1">{onlineStations}</p>
+        </div>
+      </div>
+
+      <Link
+        to={`/factory/${factory.id}`}
+        className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#1e293b] hover:bg-teal-500 hover:text-slate-950 text-teal-400 px-4 py-2.5 text-sm font-semibold transition-colors"
+      >
+        View Dashboard
+        <ArrowUpRight className="w-4 h-4" />
+      </Link>
+    </article>
+  );
+}

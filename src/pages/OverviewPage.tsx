@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useData } from '../context/DataContext';
 import { useDashboardSummary } from '../hooks/useSimulatedData';
 import StationCard from '../components/dashboard/StationCard';
+import FactoryCard from '../components/dashboard/FactoryCard';
 import { Activity, AlertTriangle, CheckCircle, Factory, ShieldAlert } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -31,15 +32,15 @@ export default function OverviewPage() {
         {/* Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard 
-            title="Total Stations" 
-            value={summary.total} 
+            title="Total Factories"
+            value={factories.length}
             icon={Factory} 
             color="text-slate-300"
             bg="bg-slate-800/50"
             border="border-slate-700/50"
           />
           <StatCard 
-            title="Online & Optimal" 
+            title="Online Devices"
             value={summary.online} 
             icon={CheckCircle} 
             color="text-emerald-400"
@@ -47,7 +48,7 @@ export default function OverviewPage() {
             border="border-emerald-500/20"
           />
           <StatCard 
-            title="Warning State" 
+            title="Warning Devices"
             value={summary.warning} 
             icon={AlertTriangle} 
             color="text-amber-400"
@@ -55,7 +56,7 @@ export default function OverviewPage() {
             border="border-amber-500/20"
           />
           <StatCard 
-            title="Critical Alarms" 
+            title="Critical Devices"
             value={summary.critical} 
             icon={ShieldAlert} 
             color="text-rose-400"
@@ -64,6 +65,26 @@ export default function OverviewPage() {
             pulse={summary.critical > 0}
           />
         </div>
+
+        {/* Factory cards */}
+        <section className="space-y-4">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-bold text-white">Factories</h2>
+              <p className="text-sm text-slate-500 mt-1">Facility health and monitoring coverage at a glance.</p>
+            </div>
+            <span className="text-xs text-slate-500 font-mono-data">{factories.length} facilities</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            {factories.map((factory) => (
+              <FactoryCard
+                key={factory.id}
+                factory={factory}
+                stations={stations.filter((station) => station.factoryId === factory.id)}
+              />
+            ))}
+          </div>
+        </section>
 
         {/* Filters */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">

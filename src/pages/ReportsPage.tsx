@@ -1,8 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useData } from '../context/DataContext';
 import { useStationHistory } from '../hooks/useSimulatedData';
-import { FileText, Download, Factory as FactoryIcon, MapPin, Target } from 'lucide-react';
-import { generateStationReport } from '../lib/pdf';
+import { FileText, Factory as FactoryIcon, MapPin, Target, BarChart3 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import StatusBadge from '../components/common/StatusBadge';
 
@@ -46,17 +45,6 @@ export default function ReportsPage() {
   const queryStationId = selectedStationId || stations[0]?.id || '';
   const { history, stats } = useStationHistory(queryStationId, PERIOD_HOURS[selectedPeriod]);
 
-  const handleDownload = () => {
-    if (!factory || !station) return;
-    generateStationReport({
-      factory,
-      station,
-      history,
-      stats,
-      periodLabel: PERIOD_LABELS[selectedPeriod]
-    });
-  };
-
   return (
     <div className="p-8 flex-1 overflow-y-auto">
       <div className="max-w-[1000px] mx-auto space-y-8">
@@ -67,7 +55,7 @@ export default function ReportsPage() {
             <FileText className="w-8 h-8 text-teal-400" />
             Compliance Reports
           </h1>
-          <p className="text-slate-400 text-sm mt-1">Generate and download official environmental monitoring PDF reports.</p>
+          <p className="text-slate-400 text-sm mt-1">Prepare an environmental monitoring report for a selected facility and station.</p>
         </div>
 
         {/* Configuration Builder */}
@@ -167,18 +155,29 @@ export default function ReportsPage() {
                       </tbody>
                     </table>
                   </div>
+
+                  <div className="rounded-xl border border-dashed border-slate-700 bg-[#020617]/30 p-6 flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center shrink-0">
+                      <BarChart3 className="w-5 h-5 text-teal-400" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-slate-200">Charts Placeholder</h4>
+                      <p className="text-xs text-slate-500 mt-1">Trend charts will be included when report export is implemented.</p>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="w-full md:w-64 flex flex-col justify-end">
                   <button
-                    onClick={handleDownload}
+                    type="button"
+                    disabled
                     className="w-full h-14 bg-teal-500 hover:bg-teal-400 text-slate-950 rounded-xl font-bold text-base flex items-center justify-center gap-3 transition-all shadow-[0_0_20px_rgba(20,184,166,0.3)] hover:shadow-[0_0_30px_rgba(20,184,166,0.5)] hover:-translate-y-0.5"
                   >
-                    <Download className="w-5 h-5" />
-                    Download PDF
+                    <FileText className="w-5 h-5" />
+                    Generate PDF
                   </button>
                   <p className="text-center text-xs text-slate-500 mt-4">
-                    Report includes full historical data points, threshold analysis, and maintenance records.
+                    PDF export is planned for a future release.
                   </p>
                 </div>
               </div>

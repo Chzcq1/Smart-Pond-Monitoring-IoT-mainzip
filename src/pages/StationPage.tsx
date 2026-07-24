@@ -2,11 +2,10 @@ import { useState, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { useStationHistory } from '../hooks/useSimulatedData';
-import { ChevronLeft, Download, Wrench, AlertTriangle, Calendar, Clock, Activity, Thermometer, Wind, Droplets, Beaker } from 'lucide-react';
+import { ChevronLeft, Wrench, AlertTriangle, Calendar, Clock, Activity, Thermometer, Wind, Droplets, Beaker } from 'lucide-react';
 import StatusBadge from '../components/common/StatusBadge';
 import { format } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
-import { generateStationReport } from '../lib/pdf';
 import { cn } from '../lib/utils';
 
 type Period = '24h' | '7d' | '30d';
@@ -40,16 +39,6 @@ export default function StationPage() {
     );
   }
 
-  const handleDownloadPDF = () => {
-    generateStationReport({
-      factory,
-      station,
-      history,
-      stats,
-      periodLabel: period === '24h' ? 'Last 24 Hours' : period === '7d' ? 'Last 7 Days' : 'Last 30 Days'
-    });
-  };
-
   return (
     <div className="p-8 pb-20 flex-1 overflow-y-auto">
       <div className="max-w-[1400px] mx-auto space-y-8">
@@ -59,12 +48,6 @@ export default function StationPage() {
           <Link to={`/factory/${factory.id}`} className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-teal-400 transition-colors uppercase tracking-wider font-semibold">
             <ChevronLeft className="w-4 h-4" /> Back to {factory.name}
           </Link>
-          <button 
-            onClick={handleDownloadPDF}
-            className="flex items-center gap-2 bg-teal-500 hover:bg-teal-400 text-slate-950 px-4 py-2 rounded-lg font-bold text-sm transition-all shadow-[0_0_15px_rgba(20,184,166,0.3)]"
-          >
-            <Download className="w-4 h-4" /> Export PDF Report
-          </button>
         </div>
 
         {/* Station Header */}
