@@ -1,0 +1,307 @@
+You are continuing an existing project.
+
+Do NOT redesign the project from scratch.
+
+Do NOT replace the existing architecture.
+
+Continue building on the current codebase.
+
+==============================
+PROJECT CONTEXT
+==============================
+
+Project Name:
+Water-MaaS (Water Monitoring-as-a-Service)
+
+This project is an MVP for business presentation.
+
+The goal is NOT to build a real IoT platform yet.
+
+No ESP8266 devices exist.
+
+No sensors exist.
+
+No backend exists.
+
+No database exists.
+
+The current website itself will be used as the presentation platform instead of PowerPoint.
+
+Future versions will connect with:
+
+- Google Apps Script
+- Google Sheets
+- LINE OA
+- ESP8266
+- Real Sensors
+
+Therefore every component must be reusable.
+
+==============================
+PROBLEM
+==============================
+
+SME factories cannot afford industrial wastewater monitoring systems because:
+
+- High equipment cost
+- Complex installation
+- Difficult maintenance
+- No real-time monitoring
+- No environmental engineer
+
+Water-MaaS solves this by providing monitoring as a monthly subscription service.
+
+This MVP demonstrates only the digital platform.
+
+==============================
+CURRENT STAGE
+==============================
+
+Frontend only.
+
+Use mock data.
+
+NO backend.
+
+NO API.
+
+NO database connection.
+
+NO authentication.
+
+NO LINE OA integration.
+
+Everything must be prepared for future integration.
+
+==============================
+OBJECTIVE
+==============================
+
+Transform the website into a professional SaaS dashboard.
+
+The dashboard should feel like a real commercial monitoring platform.
+
+==============================
+FEATURES TO BUILD
+==============================
+
+1. Dashboard Homepage
+
+Display summary cards:
+
+- Total Factories
+- Online Devices
+- Warning Devices
+- Critical Devices
+
+--------------------------------
+
+2. Factory Cards
+
+Each factory card displays:
+
+Factory Name
+
+Location
+
+Status
+
+Total Monitoring Stations
+
+View Dashboard button
+
+Support unlimited factories.
+
+--------------------------------
+
+3. Monitoring Station Cards
+
+Each factory contains multiple monitoring stations.
+
+Each station card displays:
+
+Station Name
+
+Status Badge
+
+pH
+
+Temperature
+
+DO
+
+Estimated BOD
+
+Turbidity
+
+Last Updated
+
+View Details button
+
+Support unlimited stations.
+
+--------------------------------
+
+4. Station Detail Page
+
+Each station has its own page.
+
+Display:
+
+Current Values
+
+Daily Graphs
+
+Weekly Graphs
+
+Monthly Graphs
+
+Charts:
+
+- pH
+- Temperature
+- DO
+- Estimated BOD
+- Turbidity
+
+Statistics:
+
+Latest
+
+Average
+
+Maximum
+
+Minimum
+
+--------------------------------
+
+5. Maintenance Section
+
+Display:
+
+Last Cleaning
+
+Next Cleaning
+
+Last Calibration
+
+Next Calibration
+
+Remaining Days
+
+Maintenance Status
+
+--------------------------------
+
+6. Alarm Section
+
+Display Alarm History.
+
+Example:
+
+Warning
+
+Critical
+
+Resolved
+
+Timestamp
+
+Severity Badge
+
+--------------------------------
+
+7. Reports Page
+
+Create report page layout.
+
+Do NOT implement PDF yet.
+
+Only prepare UI.
+
+Include:
+
+Factory Information
+
+Station
+
+Summary
+
+Charts Placeholder
+
+Generate PDF Button
+
+(No functionality yet.)
+
+==============================
+DATA
+==============================
+
+Use realistic mock data.
+
+DO NOT generate completely random values.
+
+Make values look believable.
+
+Temperature changes slowly.
+
+pH remains stable.
+
+DO slowly decreases during abnormal conditions.
+
+Estimated BOD slowly increases.
+
+Turbidity fluctuates realistically.
+
+==============================
+UI REQUIREMENTS
+==============================
+
+Professional SaaS design.
+
+Industrial style.
+
+Modern cards.
+
+Responsive layout.
+
+Consistent spacing.
+
+Reusable components.
+
+No duplicated code.
+
+==============================
+IMPORTANT
+==============================
+
+DO NOT implement:
+
+Google Sheets
+
+Apps Script
+
+LINE OA
+
+Authentication
+
+Backend
+
+MQTT
+
+ESP8266
+
+PDF Export
+
+Only prepare the frontend architecture.
+
+==============================
+EXPECTED RESULT
+==============================
+
+After this sprint, the project should look like a real commercial wastewater monitoring dashboard.
+
+Every screen should already exist.
+
+Only the data source will change in future development.
