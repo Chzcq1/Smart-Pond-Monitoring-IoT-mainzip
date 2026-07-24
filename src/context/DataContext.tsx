@@ -1,17 +1,19 @@
 import { createContext, useContext, ReactNode } from 'react';
-import { useSimulatedData } from '../hooks/useSimulatedData';
+import { useGoogleSheetsData } from '../hooks/useGoogleSheetsData';
 import type { Factory, Station, Alert } from '../types';
 
 interface DataContextType {
   factories: Factory[];
   stations: Station[];
   alerts: Alert[];
+  loading: boolean;
+  error: string | null;
 }
 
 const DataContext = createContext<DataContextType | null>(null);
 
 export function DataProvider({ children }: { children: ReactNode }) {
-  const data = useSimulatedData();
+  const data = useGoogleSheetsData();
   return (
     <DataContext.Provider value={data}>
       {children}
@@ -21,8 +23,6 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
 export function useData() {
   const context = useContext(DataContext);
-  if (!context) {
-    throw new Error('useData must be used within a DataProvider');
-  }
+  if (!context) throw new Error('useData must be used within a DataProvider');
   return context;
 }

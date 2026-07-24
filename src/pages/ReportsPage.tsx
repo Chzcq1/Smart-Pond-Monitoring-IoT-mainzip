@@ -1,17 +1,22 @@
 import { useState, useMemo } from 'react';
 import { useData } from '../context/DataContext';
 import { useStationHistory } from '../hooks/useSimulatedData';
-import { FileText, Factory as FactoryIcon, MapPin, Target, BarChart3 } from 'lucide-react';
+import { FileText, Factory as FactoryIcon, MapPin, Target, BarChart3, Beaker, Wind, Activity, Droplets } from 'lucide-react';
 import { cn } from '../lib/utils';
 import StatusBadge from '../components/common/StatusBadge';
 import { useI18n } from '../i18n/I18nContext';
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid,
+  Tooltip, ResponsiveContainer, ReferenceLine,
+} from 'recharts';
+import { format } from 'date-fns';
 
 type ReportPeriod = 'today' | '7days' | '30days';
 
-const PERIOD_HOURS = {
+const PERIOD_HOURS: Record<ReportPeriod, number> = {
   'today': 24,
   '7days': 168,
-  '30days': 720
+  '30days': 720,
 };
 
 const PERIOD_LABELS = {
@@ -27,51 +32,45 @@ export default function ReportsPage() {
   const [selectedStationId, setSelectedStationId] = useState<string>('');
   const [selectedPeriod, setSelectedPeriod] = useState<ReportPeriod>('7days');
 
-  // When factory changes, reset station unless the new factory has the same station
   const handleFactoryChange = (fid: string) => {
     setSelectedFactoryId(fid);
     const factoryStations = stations.filter(s => s.factoryId === fid);
-    if (factoryStations.length > 0) {
-      setSelectedStationId(factoryStations[0].id);
-    } else {
-      setSelectedStationId('');
-    }
+    setSelectedStationId(factoryStations.length > 0 ? factoryStations[0].id : '');
   };
 
   const factory = useMemo(() => factories.find(f => f.id === selectedFactoryId), [factories, selectedFactoryId]);
   const station = useMemo(() => stations.find(s => s.id === selectedStationId), [stations, selectedStationId]);
   const factoryStations = useMemo(() => stations.filter(s => s.factoryId === selectedFactoryId), [stations, selectedFactoryId]);
 
-  // Hook must be called unconditionally. We pass a default stationId if none selected to satisfy hook rules.
-  // We'll just ignore the data if no station is selected.
   const queryStationId = selectedStationId || stations[0]?.id || '';
   const { history, stats } = useStationHistory(queryStationId, PERIOD_HOURS[selectedPeriod]);
 
   return (
     <div className="p-8 flex-1 overflow-y-auto">
       <div className="max-w-[1000px] mx-auto space-y-8">
-        
+
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
             <FileText className="w-8 h-8 text-teal-400" />
-              {t('reports.title')}
+            {t('reports.title')}
           </h1>
           <p className="text-slate-400 text-sm mt-1">{t('reports.description')}</p>
         </div>
 
         {/* Configuration Builder */}
         <div className="bg-[#0f172a] border border-[#1e293b] rounded-2xl p-6 lg:p-8 space-y-8">
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
+
             {/* Step 1: Factory */}
             <div className="space-y-3">
               <label className="text-xs uppercase tracking-wider text-slate-500 font-semibold flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-[#1e293b] text-slate-300 flex items-center justify-center font-bold">1</span> {t('reports.selectFacility')}
+                <span className="w-5 h-5 rounded-full bg-[#1e293b] text-slate-300 flex items-center justify-center font-bold">1</span>
+                {t('reports.selectFacility')}
               </label>
-              <select 
-                value={selectedFactoryId} 
+              <select
+                value={selectedFactoryId}
                 onChange={e => handleFactoryChange(e.target.value)}
                 className="w-full bg-[#1e293b] border border-slate-700 text-white text-sm rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500/50 hover:bg-[#1e293b]/80 transition-colors cursor-pointer appearance-none"
               >
@@ -85,10 +84,11 @@ export default function ReportsPage() {
             {/* Step 2: Station */}
             <div className="space-y-3">
               <label className={cn("text-xs uppercase tracking-wider font-semibold flex items-center gap-2 transition-colors", selectedFactoryId ? "text-slate-500" : "text-slate-700")}>
-                <span className={cn("w-5 h-5 rounded-full flex items-center justify-center font-bold", selectedFactoryId ? "bg-[#1e293b] text-slate-300" : "bg-slate-800 text-slate-600")}>2</span> {t('reports.selectStation')}
+                <span className={cn("w-5 h-5 rounded-full flex items-center justify-center font-bold", selectedFactoryId ? "bg-[#1e293b] text-slate-300" : "bg-slate-800 text-slate-600")}>2</span>
+                {t('reports.selectStation')}
               </label>
-              <select 
-                value={selectedStationId} 
+              <select
+                value={selectedStationId}
                 onChange={e => setSelectedStationId(e.target.value)}
                 disabled={!selectedFactoryId}
                 className="w-full bg-[#1e293b] border border-slate-700 text-white text-sm rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500/50 hover:bg-[#1e293b]/80 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed appearance-none"
@@ -103,10 +103,11 @@ export default function ReportsPage() {
             {/* Step 3: Period */}
             <div className="space-y-3">
               <label className={cn("text-xs uppercase tracking-wider font-semibold flex items-center gap-2 transition-colors", selectedStationId ? "text-slate-500" : "text-slate-700")}>
-                <span className={cn("w-5 h-5 rounded-full flex items-center justify-center font-bold", selectedStationId ? "bg-[#1e293b] text-slate-300" : "bg-slate-800 text-slate-600")}>3</span> {t('reports.selectPeriod')}
+                <span className={cn("w-5 h-5 rounded-full flex items-center justify-center font-bold", selectedStationId ? "bg-[#1e293b] text-slate-300" : "bg-slate-800 text-slate-600")}>3</span>
+                {t('reports.selectPeriod')}
               </label>
-              <select 
-                value={selectedPeriod} 
+              <select
+                value={selectedPeriod}
                 onChange={e => setSelectedPeriod(e.target.value as ReportPeriod)}
                 disabled={!selectedStationId}
                 className="w-full bg-[#1e293b] border border-slate-700 text-white text-sm rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-teal-500/50 hover:bg-[#1e293b]/80 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed appearance-none"
@@ -120,14 +121,15 @@ export default function ReportsPage() {
 
           {/* Preview Section */}
           {factory && station && (
-            <div className="pt-8 border-t border-[#1e293b] animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="pt-8 border-t border-[#1e293b] animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8">
+
+              {/* Summary header */}
               <div className="flex flex-col md:flex-row gap-8 justify-between">
-                
                 <div className="flex-1 space-y-6">
                   <div className="flex items-start justify-between">
                     <div>
-                        <h3 className="text-2xl font-bold text-white mb-2">{t('reports.preview')}</h3>
-                        <p className="text-slate-400 text-sm">{t('reports.previewDescription')}</p>
+                      <h3 className="text-2xl font-bold text-white mb-2">{t('reports.preview')}</h3>
+                      <p className="text-slate-400 text-sm">{t('reports.previewDescription')}</p>
                     </div>
                     <StatusBadge status={station.status} />
                   </div>
@@ -157,32 +159,76 @@ export default function ReportsPage() {
                       </tbody>
                     </table>
                   </div>
-
-                  <div className="rounded-xl border border-dashed border-slate-700 bg-[#020617]/30 p-6 flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center shrink-0">
-                      <BarChart3 className="w-5 h-5 text-teal-400" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-semibold text-slate-200">{t('reports.chartsPlaceholder')}</h4>
-                      <p className="text-xs text-slate-500 mt-1">{t('reports.chartsDescription')}</p>
-                    </div>
-                  </div>
                 </div>
 
                 <div className="w-full md:w-64 flex flex-col justify-end">
                   <button
                     type="button"
-                    disabled
+                    onClick={() => {
+                      import('../lib/pdf').then(({ generateStationReport }) =>
+                        generateStationReport({ factory, station, history, stats, periodLabel: t(PERIOD_LABELS[selectedPeriod]) })
+                      );
+                    }}
                     className="w-full h-14 bg-teal-500 hover:bg-teal-400 text-slate-950 rounded-xl font-bold text-base flex items-center justify-center gap-3 transition-all shadow-[0_0_20px_rgba(20,184,166,0.3)] hover:shadow-[0_0_30px_rgba(20,184,166,0.5)] hover:-translate-y-0.5"
                   >
                     <FileText className="w-5 h-5" />
                     {t('reports.generatePDF')}
                   </button>
-                  <p className="text-center text-xs text-slate-500 mt-4">
-                    {t('reports.pdfPlanned')}
-                  </p>
                 </div>
               </div>
+
+              {/* Trend Charts */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <BarChart3 className="w-5 h-5 text-teal-400" />
+                  <h3 className="text-lg font-bold text-white">{t('reports.trendCharts')}</h3>
+                  <span className="text-xs text-slate-500 ml-auto">{history.length} data points</span>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <MiniChart
+                    title="pH"
+                    icon={Beaker}
+                    data={history}
+                    dataKey="ph"
+                    color="#06b6d4"
+                    unit=""
+                    min={station.thresholds.phMin}
+                    max={station.thresholds.phMax}
+                    domain={[2, 12]}
+                  />
+                  <MiniChart
+                    title="DO"
+                    icon={Wind}
+                    data={history}
+                    dataKey="dissolvedOxygen"
+                    color="#3b82f6"
+                    unit="mg/L"
+                    min={station.thresholds.doMin}
+                    domain={[0, 10]}
+                  />
+                  <MiniChart
+                    title="Estimated BOD"
+                    icon={Activity}
+                    data={history}
+                    dataKey="estimatedBOD"
+                    color="#10b981"
+                    unit="mg/L"
+                    max={station.thresholds.bodMax}
+                    domain={[0, 150]}
+                  />
+                  <MiniChart
+                    title={t('common.turbidity')}
+                    icon={Droplets}
+                    data={history}
+                    dataKey="turbidity"
+                    color="#8b5cf6"
+                    unit="NTU"
+                    max={station.thresholds.turbidityMax}
+                    domain={[0, 250]}
+                  />
+                </div>
+              </div>
+
             </div>
           )}
 
@@ -218,5 +264,67 @@ function PreviewStatRow({ label, stats, unit }: { label: string, stats: any, uni
       <td className="px-4 py-2 text-slate-400">{stats.average.toFixed(1)} <span className="text-xs">{unit}</span></td>
       <td className="px-4 py-2 text-slate-400 text-right">{stats.max.toFixed(1)} <span className="text-xs">{unit}</span></td>
     </tr>
+  );
+}
+
+function MiniChart({ title, icon: Icon, data, dataKey, color, unit, min, max, domain }: {
+  title: string;
+  icon: any;
+  data: any[];
+  dataKey: string;
+  color: string;
+  unit: string;
+  min?: number;
+  max?: number;
+  domain: [number, number];
+}) {
+  return (
+    <div className="bg-[#0a1628] rounded-xl border border-[#1e293b] p-4">
+      <div className="flex items-center gap-2 mb-3">
+        <Icon className="w-4 h-4 text-teal-400" />
+        <span className="text-sm font-semibold text-white">{title}</span>
+        {unit && <span className="text-xs text-slate-500">({unit})</span>}
+        {min !== undefined && <span className="ml-auto text-[10px] text-slate-500">min {min}</span>}
+        {max !== undefined && <span className="ml-auto text-[10px] text-slate-500">max {max}</span>}
+      </div>
+      <div className="h-[140px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={data} margin={{ top: 2, right: 2, bottom: 2, left: -24 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
+            <XAxis
+              dataKey="timestamp"
+              tickFormatter={(ts) => format(new Date(ts), 'HH:mm')}
+              stroke="#334155"
+              tick={{ fill: '#475569', fontSize: 9, fontFamily: 'Space Mono' }}
+              tickMargin={6}
+              interval="preserveStartEnd"
+            />
+            <YAxis
+              domain={domain}
+              stroke="#334155"
+              tick={{ fill: '#475569', fontSize: 9, fontFamily: 'Space Mono' }}
+              tickMargin={4}
+            />
+            <Tooltip
+              contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b', borderRadius: '8px', fontFamily: 'Space Mono', fontSize: '11px' }}
+              itemStyle={{ color: '#f8fafc' }}
+              labelStyle={{ color: '#94a3b8', marginBottom: '2px' }}
+              labelFormatter={(ts) => format(new Date(ts), 'dd MMM HH:mm')}
+            />
+            {min !== undefined && <ReferenceLine y={min} stroke="#f43f5e" strokeDasharray="3 3" strokeWidth={1} />}
+            {max !== undefined && <ReferenceLine y={max} stroke="#f43f5e" strokeDasharray="3 3" strokeWidth={1} />}
+            <Line
+              type="monotone"
+              dataKey={dataKey}
+              stroke={color}
+              strokeWidth={1.5}
+              dot={false}
+              activeDot={{ r: 3, fill: color, stroke: '#0f172a', strokeWidth: 2 }}
+              isAnimationActive={false}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
   );
 }
