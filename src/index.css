@@ -5,42 +5,19 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --sidebar-width: 260px;
-    
-    --bg-base: 222 47% 5%; /* Slate 950 approx */
-    --bg-surface: 222 47% 9%; /* Slate 900 approx */
-    --bg-surface-hover: 222 47% 12%; 
-    --border-color: 215 28% 17%; /* Slate 800 approx */
-    
-    --text-primary: 210 40% 98%;
-    --text-secondary: 215 20% 65%;
-    --text-muted: 215 16% 47%;
-    
-    --accent-teal: 171 77% 64%;
-    --accent-cyan: 188 86% 53%;
-    --accent-blue: 217 91% 60%;
-    
-    --status-online: 152 69% 31%; /* Emerald 600 */
-    --status-online-glow: 152 69% 31% / 0.3;
-    --status-warning: 38 92% 50%; /* Amber 500 */
-    --status-warning-glow: 38 92% 50% / 0.3;
-    --status-critical: 349 89% 52%; /* Rose 500 */
-    --status-critical-glow: 349 89% 52% / 0.3;
-    --status-offline: 215 16% 47%;
-  }
-
   html {
-    @apply antialiased bg-[#020617] text-slate-50;
+    @apply antialiased;
     font-family: 'Outfit', sans-serif;
   }
 
+  /* Light mode defaults */
   body {
-    @apply bg-[#020617] text-slate-50 overflow-x-hidden;
+    @apply bg-gray-50 text-gray-900 overflow-x-hidden;
   }
 
-  * {
-    @apply border-[#1e293b]; /* border-slate-800 */
+  /* Dark mode overrides */
+  .dark body {
+    @apply bg-[#020617] text-slate-50;
   }
 
   .font-mono-data {
@@ -51,6 +28,9 @@
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+  }
+  .dark .scrollbar-thin {
     scrollbar-color: #334155 transparent;
   }
   .scrollbar-thin::-webkit-scrollbar {
@@ -61,18 +41,17 @@
     background: transparent;
   }
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: #334155;
+    background-color: #cbd5e1;
     border-radius: 3px;
   }
-
-  .glass-panel {
-    @apply bg-[#0f172a]/80 backdrop-blur-md border border-[#1e293b] shadow-lg;
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #334155;
   }
 }
 
 @keyframes pulse-dot {
-  0% { box-shadow: 0 0 0 0 var(--status-critical-glow); }
-  70% { box-shadow: 0 0 0 6px transparent; }
+  0%   { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.4); }
+  70%  { box-shadow: 0 0 0 6px transparent; }
   100% { box-shadow: 0 0 0 0 transparent; }
 }
 .animate-pulse-dot {

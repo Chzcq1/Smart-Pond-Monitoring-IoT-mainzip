@@ -1,18 +1,21 @@
-import { Languages } from 'lucide-react';
 import { useI18n } from '../../i18n/I18nContext';
 
 export default function LanguageSwitcher() {
   const { language, setLanguage, t } = useI18n();
 
   return (
-    <div className="flex items-center gap-2 bg-[#0f172a] border border-[#1e293b] rounded-lg p-1" aria-label={t('common.language')}>
-      <Languages className="w-4 h-4 text-slate-500 ml-2" />
+    <div
+      className="flex items-center bg-gray-100 dark:bg-[#1e293b] rounded-xl p-1"
+      aria-label={t('common.language')}
+    >
       <button
         type="button"
         onClick={() => setLanguage('th')}
         aria-pressed={language === 'th'}
-        className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors ${
-          language === 'th' ? 'bg-teal-500 text-slate-950' : 'text-slate-400 hover:text-white'
+        className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+          language === 'th'
+            ? 'bg-white dark:bg-[#0f172a] text-teal-600 dark:text-teal-400 shadow-sm'
+            : 'text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200'
         }`}
       >
         {t('language.thai')}
@@ -21,8 +24,10 @@ export default function LanguageSwitcher() {
         type="button"
         onClick={() => setLanguage('en')}
         aria-pressed={language === 'en'}
-        className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-colors ${
-          language === 'en' ? 'bg-teal-500 text-slate-950' : 'text-slate-400 hover:text-white'
+        className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
+          language === 'en'
+            ? 'bg-white dark:bg-[#0f172a] text-teal-600 dark:text-teal-400 shadow-sm'
+            : 'text-gray-500 dark:text-slate-400 hover:text-gray-800 dark:hover:text-slate-200'
         }`}
       >
         {t('language.english')}
