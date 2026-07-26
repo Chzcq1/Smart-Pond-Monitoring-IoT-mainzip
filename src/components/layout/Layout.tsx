@@ -3,10 +3,11 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { DataProvider } from '../../context/DataContext';
 import LanguageSwitcher from './LanguageSwitcher';
-import { Menu, Sun, Moon, Bell, ChevronRight, Droplets } from 'lucide-react';
+import { Menu, Sun, Moon, ChevronRight, Droplets } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useI18n } from '../../i18n/I18nContext';
 import type { TranslationKey } from '../../i18n/translations';
+import NotificationBell from './NotificationBell';
 
 const ROUTE_META: Record<string, { crumbs: TranslationKey[]; titleKey: TranslationKey }> = {
   '/':            { crumbs: ['nav.overview'], titleKey: 'overview.title' },
@@ -79,14 +80,7 @@ export default function Layout() {
 
             {/* Right: actions */}
             <div className="flex items-center gap-2 shrink-0">
-              {/* Notification bell */}
-              <button
-                className="relative p-2 rounded-xl text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-[#1e293b] transition-colors"
-                aria-label="Notifications"
-              >
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white dark:ring-[#0f172a]" />
-              </button>
+              <NotificationBell />
 
               {/* Theme toggle */}
               <button
